@@ -1,6 +1,6 @@
 
-const cellSize = 20
-const canvasSize = 400
+const CELL_SIZE= 20
+const CANVAS_SIZE = 400
 let snake1 = initSnake()
 let apple = {
     color: "red",
@@ -17,7 +17,7 @@ function initSnake() {
     return {
         ...initHeadAndBody(),
         direction: initDirection(),
-        width: cellSize,
+        width: CELL_SIZE,
         score: 0
     }
 }
@@ -32,8 +32,8 @@ function initHeadAndBody() {
 
 function initPosition() {
     return {
-        x: Math.floor(Math.random() * cellSize),
-        y: Math.floor(Math.random() * cellSize)
+        x: Math.floor(Math.random() * CELL_SIZE),
+        y: Math.floor(Math.random() * CELL_SIZE)
     }
 }
 
@@ -41,35 +41,44 @@ function initDirection() {
     return Math.floor(Math.random() * 4)
 }
 
+let apple2 = {
+    color: "red",
+    position: initPosition(),
+}
+
 function drawCell(ctx, x, y, img) {
     let images = document.getElementById(img)
-    if (images !== null) ctx.drawImage(images, x * cellSize, y * cellSize, cellSize, cellSize)
-
+    if (images !== null) ctx.drawImage(images, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 }
 
 function drawScore(snake, canvas) {
     let scoreCanvas = document.getElementById(canvas)
     if (scoreCanvas !== null) {
         let scoreCtx = scoreCanvas.getContext("2d");
-        scoreCtx.clearRect(0, 0, canvasSize, canvasSize)
+        scoreCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
         scoreCtx.font = "30px Arial";
         scoreCtx.fillStyle = snake.color
         scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
     }
 }
 function draw() {
-    setInterval(function () {
-        let snakeCanvas = document.querySelector("#snakeBoard")
-        let ctx = snakeCanvas.getContext("2d")
+    setInterval(function() {
+        let snakeCanvas = document.getElementById("snakeBoard");
+        let ctx = snakeCanvas.getContext("2d");
+        let img = document.getElementById("apple");
 
-        ctx.clearRect(0, 0, canvasSize, canvasSize)
+        ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
+
+        
         drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
         for (let i = 1; i < snake1.body.length; i++) {
             drawCell(ctx, snake1.body[i].x, snake1.body[i].y, "bulat")
         }
       
         drawCell(ctx, apple.position.x, apple.position.y, "apple")
+        drawCell(ctx, apple2.position.x, apple2.position.y, "apple")
+
 
         drawScore(snake1, "score1Board")
 
@@ -80,7 +89,7 @@ draw()
 
 function eat(snake, apple) {
     let eat = new Audio()
-    eat.src = "eat.mp3"
+    eat.src = "./assets/eat.mp3"
     if (snake.head.x === apple.position.x && snake.head.y === apple.position.y) {
         eat.play()
         apple.position = initPosition()
@@ -93,11 +102,12 @@ function eat(snake, apple) {
 function moveBody(snake) {
     snake.body.unshift({ x: snake.head.x, y: snake.head.y });
     snake.body.pop();
+
 }
 function checkCollision(snakes) {
     let isCollide = false
     let gameOver = new Audio()
-    gameOver.src = "GameOver.mp3"
+    gameOver.src = "./assets/GameOver.mp3"
     for (let i = 0; i < snakes.length; i++) {
         for (let j = 0; j < snakes.length; j++) {
             for (let k = 1; k < snakes[j].body.length; k++) {
@@ -121,19 +131,15 @@ function move(snake) {
     switch (snake.direction) {
         case direction.Left:
             moveLeft(snake)
-            eat(snake, apple)
             break;
         case direction.Right:
             moveRight(snake)
-            eat(snake, apple)
             break;
         case direction.Up:
             moveUp(snake)
-            eat(snake, apple)
             break;
         case direction.Down:
             moveDown(snake)
-            eat(snake, apple)
             break;
     }
     moveBody(snake);
@@ -147,10 +153,10 @@ function move(snake) {
 
 function teleport(snake) {
     if (snake.head.x < 0) {
-        snake.head.x = canvasSize / cellSize - 1
+        snake.head.x = CANVAS_SIZE / CELL_SIZE - 1
     }
     if (snake.head.y === -1) {
-        snake.head.y = canvasSize / cellSize - 1
+        snake.head.y = CANVAS_SIZE / CELL_SIZE - 1
     }
     if (snake.head.x >= 20) {
         snake.head.x = 0
@@ -159,26 +165,35 @@ function teleport(snake) {
         snake.head.y = 0
     }
 }
-
 function moveLeft(snake) {
-    snake.head.x--
-    teleport(snake)
+    snake.head.x--;
+    teleport(snake);
+    eat(snake, apple);
+    eat(snake, apple2);
 }
 
 function moveRight(snake) {
-    snake.head.x++
-    teleport(snake)
-}
-
-function moveUp(snake) {
-    snake.head.y--
-    teleport(snake)
+    snake.head.x++;
+    teleport(snake);
+    eat(snake, apple);
+    eat(snake, apple2);
 }
 
 function moveDown(snake) {
-    snake.head.y++
-    teleport(snake)
+    snake.head.y++;
+    teleport(snake);
+    eat(snake, apple);
+    eat(snake, apple2);
 }
+
+function moveUp(snake) {
+    snake.head.y--;
+    teleport(snake);
+    eat(snake, apple);
+    eat(snake, apple2);
+
+}
+
 
 function turn(snake, d) {
     const oppositeDirections = {
