@@ -1,6 +1,6 @@
-
-const CELL_SIZE= 20
+const CELL_SIZE = 20
 const CANVAS_SIZE = 400
+const DEFAULTLIFE = 3;
 let snake1 = initSnake()
 let apple = {
     color: "red",
@@ -18,7 +18,8 @@ function initSnake() {
         ...initHeadAndBody(),
         direction: initDirection(),
         width: CELL_SIZE,
-        score: 0
+        score: 0,
+        life: DEFAULTLIFE,
     }
 }
 function initHeadAndBody() {
@@ -41,14 +42,49 @@ function initDirection() {
     return Math.floor(Math.random() * 4)
 }
 
+function showIcon(ctx, path, x, y, width = 10, height = 10) {
+    ctx.drawImage(document.getElementById(path), x, y, width, height);
+}
+
+function checkPrimer(snake) {
+    let score = snake.score;
+    let dibagi = 0;
+    for (let i = 0; i <= score; i++) {
+        if (score % i == 0) {
+            dibagi = dibagi + 1;
+        }
+    }
+    if (dibagi == 2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function drawLife(snake) {
+    let snakeCanvas = document.getElementById("snakeBoard");
+    let ctx = snakeCanvas.getContext("2d");
+
+    if (checkPrimer(snake)) {
+        drawCell(ctx, heart.position.x, heart.position.y, heart.color, "heartIcon");
+    }
+
+    for (var i = 0; i < snake.life; i++) {
+        showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
+    }
+}
+
 let apple2 = {
     color: "red",
     position: initPosition(),
 }
 
-function drawCell(ctx, x, y, img) {
-    let images = document.getElementById(img)
-    if (images !== null) ctx.drawImage(images, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+function drawCell(ctx, x, y, img = null) {
+    if (img == null) {
+        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    } else {
+        showIcon(ctx, img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+    }
 }
 
 function drawScore(snake, canvas) {
@@ -61,8 +97,9 @@ function drawScore(snake, canvas) {
         scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
     }
 }
+
 function draw() {
-    setInterval(function() {
+    setInterval(function () {
         let snakeCanvas = document.getElementById("snakeBoard");
         let ctx = snakeCanvas.getContext("2d");
         let img = document.getElementById("apple");
@@ -70,18 +107,18 @@ function draw() {
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
 
-        
+
         drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
         for (let i = 1; i < snake1.body.length; i++) {
             drawCell(ctx, snake1.body[i].x, snake1.body[i].y, "bulat")
         }
-      
+
         drawCell(ctx, apple.position.x, apple.position.y, "apple")
         drawCell(ctx, apple2.position.x, apple2.position.y, "apple")
 
 
         drawScore(snake1, "score1Board")
-
+        drawLife(snake1);
     }, 200)
 }
 draw()
