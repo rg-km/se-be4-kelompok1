@@ -47,6 +47,11 @@ let apple = {
     position: initPosition(),
 }
 
+let apple2 = {
+    color: "red",
+    position: initPosition(),
+}
+
 function drawCell(ctx, x, y, color) {
     ctx.fillStyle = color;
     ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -71,8 +76,12 @@ function draw() {
     setInterval(function() {
         let snakeCanvas = document.getElementById("snakeBoard");
         let ctx = snakeCanvas.getContext("2d");
+        let img = document.getElementById("apple");
 
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+        ctx.drawImage(img, apple.position.x * CELL_SIZE, apple.position.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        ctx.drawImage(img, apple2.position.x * CELL_SIZE, apple2.position.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         
         drawCell(ctx, snake1.head.x, snake1.head.y, snake1.color);
         for (let i = 1; i < snake1.body.length; i++) {
@@ -82,7 +91,7 @@ function draw() {
         for (let i = 1; i < snake2.body.length; i++) {
             drawCell(ctx, snake2.body[i].x, snake2.body[i].y, snake2.color);
         }
-        drawCell(ctx, apple.position.x, apple.position.y, apple.color);
+        // drawCell(ctx, apple.position.x, apple.position.y, apple.color);
 
         drawScore(snake1);
         drawScore(snake2);
@@ -116,24 +125,28 @@ function moveLeft(snake) {
     snake.head.x--;
     teleport(snake);
     eat(snake, apple);
+    eat(snake, apple2);
 }
 
 function moveRight(snake) {
     snake.head.x++;
     teleport(snake);
     eat(snake, apple);
+    eat(snake, apple2);
 }
 
 function moveDown(snake) {
     snake.head.y++;
     teleport(snake);
     eat(snake, apple);
+    eat(snake, apple2);
 }
 
 function moveUp(snake) {
     snake.head.y--;
     teleport(snake);
     eat(snake, apple);
+    eat(snake, apple2);
 }
 
 function checkCollision(snakes) {
