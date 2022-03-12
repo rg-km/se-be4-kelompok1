@@ -65,10 +65,8 @@ function draw() {
     setInterval(function() {
         let snakeCanvas = document.getElementById("snakeBoard");
         let ctx = snakeCanvas.getContext("2d");
-        let img = document.getElementById("apple");
 
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
 
         
         drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
@@ -88,10 +86,8 @@ draw()
 
 
 function eat(snake, apple) {
-    let eat = new Audio()
-    eat.src = "./assets/eat.mp3"
     if (snake.head.x === apple.position.x && snake.head.y === apple.position.y) {
-        eat.play()
+
         apple.position = initPosition()
         snake.score++
         snake.body.push({ x: snake.head.x, y: snake.head.y })
@@ -106,19 +102,14 @@ function moveBody(snake) {
 }
 function checkCollision(snakes) {
     let isCollide = false
-    let gameOver = new Audio()
-    gameOver.src = "./assets/GameOver.mp3"
     for (let i = 0; i < snakes.length; i++) {
-        for (let j = 0; j < snakes.length; j++) {
-            for (let k = 1; k < snakes[j].body.length; k++) {
-                if (snakes[i].head.x === snakes[j].body[k].x && snakes[i].head.y === snakes[j].body[k].y) {
+            for (let k = 1; k < snakes[0].body.length; k++) {
+                if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
                     isCollide = true
-                }
             }
         }
     }
     if (isCollide) {
-        gameOver.play()
         setTimeout(() => {
             alert("Game Over")
         }, 150)
