@@ -2,13 +2,13 @@ const CELL_SIZE = 20
 const CANVAS_SIZE = 400
 const DEFAULTLIFE = 3;
 const REDRAW_INTERVAL = 50;
-let DEFAULTSPEED = 150;
+let DEFAULTSPEED = 250;
 const LEVELS = [
     { level: 1, speed: DEFAULTSPEED, },
-    { level: 2, speed: 100, },
-    { level: 3, speed: 90, },
-    { level: 4, speed: 60, },
-    { level: 5, speed: 50, },
+    { level: 2, speed:  DEFAULTSPEED-20, },
+    { level: 3, speed: DEFAULTSPEED-40, },
+    { level: 4, speed: DEFAULTSPEED-60, },
+    { level: 5, speed: DEFAULTSPEED-80, },
 ];
 let snake1 = initSnake()
 let apple = {
@@ -144,6 +144,8 @@ draw()
 
 
 function eat(snake, feed) {
+    let eat = new Audio()
+    eat.src="./assets/eat.mp3"
     if (snake.head.x === feed.position.x && snake.head.y === feed.position.y) {
         eat.play()
         feed.position = initPosition()
@@ -205,6 +207,8 @@ function drawSpeed(snake, canvas) {
 
 function checkCollision(snakes) {
     let isCollide = false
+    let gameOver = new Audio()
+    gameOver.src = "./assets/GameOver.mp3"
     for (let i = 0; i < snakes.length; i++) {
             for (let k = 1; k < snakes[0].body.length; k++) {
                 if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
@@ -213,6 +217,7 @@ function checkCollision(snakes) {
         }
     }
     if (isCollide) {
+        gameOver.play()
         setTimeout(() => {
             alert("Game Over")
         }, 150)
