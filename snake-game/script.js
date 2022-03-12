@@ -1,6 +1,6 @@
-
 const CELL_SIZE = 20
 const CANVAS_SIZE = 400
+const DEFAULTLIFE = 3;
 const REDRAW_INTERVAL = 50;
 let DEFAULTSPEED = 150;
 const LEVELS = [
@@ -36,6 +36,7 @@ function initSnake() {
         width: CELL_SIZE,
         score: 0,
         level: 1,
+        life: DEFAULTLIFE,
     }
 }
 function initHeadAndBody() {
@@ -58,9 +59,44 @@ function initDirection() {
     return Math.floor(Math.random() * 4)
 }
 
-function drawCell(ctx, x, y, img) {
-    let images = document.getElementById(img)
-    if (images !== null) ctx.drawImage(images, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+function showIcon(ctx, path, x, y, width = 10, height = 10) {
+    ctx.drawImage(document.getElementById(path), x, y, width, height);
+}
+
+function checkPrimer(snake) {
+    let score = snake.score;
+    let dibagi = 0;
+    for (let i = 0; i <= score; i++) {
+        if (score % i == 0) {
+            dibagi = dibagi + 1;
+        }
+    }
+    if (dibagi == 2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function drawLife(snake) {
+    let snakeCanvas = document.getElementById("snakeBoard");
+    let ctx = snakeCanvas.getContext("2d");
+
+    // if (checkPrimer(snake)) {
+    //     drawCell(ctx, heart.position.x, heart.position.y, heart.color, "heartIcon");
+    // }
+
+    for (var i = 0; i < snake.life; i++) {
+        showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
+    }
+}
+
+function drawCell(ctx, x, y, img = null) {
+    if (img == null) {
+        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    } else {
+        showIcon(ctx, img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+    }
 }
 
 function drawScore(snake, canvas) {
@@ -73,6 +109,7 @@ function drawScore(snake, canvas) {
         scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
     }
 }
+
 function draw() {
     drawLevel(snake1, "levelBoard");
     setInterval(function () {
@@ -95,6 +132,7 @@ function draw() {
 
         drawScore(snake1, "score1Board")
         drawSpeed(snake1, "speedBoard");
+        drawLife(snake1);
 
     }, REDRAW_INTERVAL);
 }
