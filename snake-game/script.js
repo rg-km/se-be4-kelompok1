@@ -311,12 +311,14 @@ function checkCollision(snakes) {
     }
 
     //tembok
-    for (let i = 0; i < OBSTACLES.length; i++) {
-        for (let j = 0; j < OBSTACLES[i].obstacle.length; j++) {
-            if (snake1.level == OBSTACLES[i].level && OBSTACLES[i].obstacle.length > 0) {
-                if (snake1.head.x >= (Math.floor(OBSTACLES[i].obstacle[j].position.x / CELL_SIZE)) && snake1.head.y >= (Math.floor(OBSTACLES[i].obstacle[j].position.y / CELL_SIZE))
-                    && snake1.head.y <= (Math.floor(OBSTACLES[i].obstacle[j].position.height / HEIGHT)) + Math.floor(OBSTACLES[i].obstacle[j].position.y / CELL_SIZE) && snake1.head.x < (Math.floor(OBSTACLES[i].obstacle[j].position.x / CELL_SIZE) + Math.ceil(OBSTACLES[i].obstacle[j].position.width / WIDTH))) {
-                    isCollide = true;
+    for (let p = 0; p < snakes.length; p++) {
+        for (let i = 0; i < OBSTACLES.length; i++) {
+            for (let j = 0; j < OBSTACLES[i].obstacle.length; j++) {
+                if (snakes[p].level == OBSTACLES[i].level && OBSTACLES[i].obstacle.length > 0) {
+                    if (snakes[p].head.x >= (Math.floor(OBSTACLES[i].obstacle[j].position.x / CELL_SIZE)) && snakes[p].head.y >= (Math.floor(OBSTACLES[i].obstacle[j].position.y / CELL_SIZE))
+                        && snakes[p].head.y <= (Math.floor(OBSTACLES[i].obstacle[j].position.height / HEIGHT)) + Math.floor(OBSTACLES[i].obstacle[j].position.y / CELL_SIZE) && snakes[p].head.x < (Math.floor(OBSTACLES[i].obstacle[j].position.x / CELL_SIZE) + Math.ceil(OBSTACLES[i].obstacle[j].position.width / WIDTH))) {
+                        isCollide = true;
+                    }
                 }
             }
         }
