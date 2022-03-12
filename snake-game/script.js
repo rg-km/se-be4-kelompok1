@@ -224,7 +224,6 @@ function drawThorn(snake) {
    
 }
 
-
 function drawScore(snake, canvas) {
     let scoreCanvas = document.getElementById(canvas)
     if (scoreCanvas !== null) {
@@ -298,8 +297,13 @@ function moveBody(snake) {
 }
 
 function drawLevel(snake, canvas) {
+
+    let soundLevelUp = new Audio()
+    soundLevelUp.src="./assets/changeLevel.wav"
     let levelCanvas = document.getElementById(canvas);
     let levelCtx = levelCanvas.getContext("2d");
+
+
     if (snake.score == 0) {
         levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         levelCtx.font = "30px Arial";
@@ -311,7 +315,8 @@ function drawLevel(snake, canvas) {
         levelCtx.font = "30px Arial";
         levelCtx.fillStyle = snake.color
         levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
-        // soundLevelUp();
+        soundLevelUp.play();
+
     }
     for (var i = 0; i < LEVELS.length; i++) {
         if (snake.level == LEVELS[i].level) {
@@ -353,10 +358,13 @@ function showObstacle(snake) {
 
 
 function checkCollision(snakes) {
+
     let isCollide = false
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
-    
+    let soundHitObstacle = new Audio()
+    soundHitObstacle.src="./assets/hitObstacle.wav"
+
     for (let i = 0; i < snakes.length; i++) {
             for (let k = 1; k < snakes[0].body.length; k++) {
                 if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
@@ -388,6 +396,7 @@ function checkCollision(snakes) {
         } else {
             snake1.life--;
             snake1 = recentSnake(snake1);
+            soundHitObstacle.play();
         }
     }
     return isCollide
