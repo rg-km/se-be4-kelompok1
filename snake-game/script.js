@@ -98,7 +98,6 @@ function initSnake() {
 
 function recentSnake(snake) {
     return {
-        color: snake.color,
         ...initHeadAndBody(),
         direction: initDirection(),
         score: snake.score,
@@ -324,11 +323,11 @@ function checkCollision(snakes) {
     }
 
     if (isCollide) {
-        snake1 = initSnake()
         if (snake1.life === 1) {
             gameOver.play()
             alert("Game over");
             snake1 = initSnake("purple");
+            drawLevel(snake1, "levelBoard");
         } else {
             snake1.life--;
             snake1 = recentSnake(snake1);
