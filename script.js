@@ -3,6 +3,9 @@ const CANVAS_SIZE = 400
 const DEFAULTLIFE = 3;
 const REDRAW_INTERVAL = 50;
 let DEFAULTSPEED = 150;
+const DEFAULTCOLORBARRIER = "black";
+const WIDTH = CANVAS_SIZE / CELL_SIZE;
+const HEIGHT = CANVAS_SIZE / CELL_SIZE;
 const LEVELS = [
     { level: 1, speed: DEFAULTSPEED, },
     { level: 2, speed: 100, },
@@ -10,6 +13,53 @@ const LEVELS = [
     { level: 4, speed: 60, },
     { level: 5, speed: 50, },
 ];
+const OBSTACLES = [
+    {
+        level: 1,
+        obstacle: [
+            //obstacle code here
+        ]
+    },
+    {
+        level: 2,
+        obstacle: [
+            {
+                position: initBarrier(50, 100, 5, 150),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(350, 100, 5, 150),
+                color: DEFAULTCOLORBARRIER,
+            },
+        ]
+    },
+    {
+        level: 3,
+        obstacle: [
+            {
+                position: initBarrier(50, 100, 250, 5),
+                color: DEFAULTCOLORBARRIER,
+            },
+            {
+                position: initBarrier(50, 250, 250, 5),
+                color: DEFAULTCOLORBARRIER,
+            }
+        ]
+    },
+    {
+        level: 4,
+        obstacle: [
+            //obstacle code here
+        ]
+    },
+    {
+        level: 5,
+        obstacle: [
+            //obstacle code here
+        ]
+    },
+];
+
 let snake1 = initSnake()
 let apple = {
     type: "food",
@@ -45,6 +95,17 @@ function initSnake() {
         life: DEFAULTLIFE,
     }
 }
+
+function recentSnake(snake) {
+    return {
+        ...initHeadAndBody(),
+        direction: initDirection(),
+        score: snake.score,
+        life: snake.life,
+        level: snake.level,
+    }
+}
+
 function initHeadAndBody() {
     let head = initPosition()
     let body = [{ x: head.x, y: head.y }]
@@ -63,6 +124,15 @@ function initPosition() {
 
 function initDirection() {
     return Math.floor(Math.random() * 4)
+}
+
+function initBarrier(x, y, width, height) {
+    return {
+        x: x,
+        y: y,
+        width: width,
+        height: height
+    }
 }
 
 function showIcon(ctx, path, x, y, width = 10, height = 10) {
@@ -105,6 +175,11 @@ function drawCell(ctx, x, y, img = null) {
     }
 }
 
+function drawObstacle(ctx, x, y, width, height, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, width, height);
+}
+
 function drawScore(snake, canvas) {
     let scoreCanvas = document.getElementById(canvas)
     if (scoreCanvas !== null) {
@@ -124,7 +199,7 @@ function draw() {
         let img = document.getElementById("apple");
 
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
+        showObstacle(snake1);
 
 
         drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
@@ -206,6 +281,21 @@ function drawSpeed(snake, canvas) {
 
 }
 
+function showObstacle(snake) {
+    let snakeCanvas = document.getElementById("snakeBoard");
+    let ctx = snakeCanvas.getContext("2d");
+    for (let i = 0; i < OBSTACLES.length; i++) {
+        for (let j = 0; j < OBSTACLES[i].obstacle.length; j++) {
+            if (snake.level == OBSTACLES[i].level) {
+                if (OBSTACLES[i].obstacle.length > 0) {
+                    ctx.fillStyle = OBSTACLES[i].obstacle[j].color;
+                    drawObstacle(ctx, OBSTACLES[i].obstacle[j].position.x, OBSTACLES[i].obstacle[j].position.y, OBSTACLES[i].obstacle[j].position.width, OBSTACLES[i].obstacle[j].position.height, OBSTACLES[i].obstacle[j].color);
+                }
+            }
+        }
+    }
+}
+
 function checkCollision(snakes) {
     let isCollide = false
     let gameOver = new Audio()
@@ -219,12 +309,31 @@ function checkCollision(snakes) {
             }
         }
     }
+
+    //tembok
+    for (let p = 0; p < snakes.length; p++) {
+        for (let i = 0; i < OBSTACLES.length; i++) {
+            for (let j = 0; j < OBSTACLES[i].obstacle.length; j++) {
+                if (snakes[p].level == OBSTACLES[i].level && OBSTACLES[i].obstacle.length > 0) {
+                    if (snakes[p].head.x >= (Math.floor(OBSTACLES[i].obstacle[j].position.x / CELL_SIZE)) && snakes[p].head.y >= (Math.floor(OBSTACLES[i].obstacle[j].position.y / CELL_SIZE))
+                        && snakes[p].head.y <= (Math.floor(OBSTACLES[i].obstacle[j].position.height / HEIGHT)) + Math.floor(OBSTACLES[i].obstacle[j].position.y / CELL_SIZE) && snakes[p].head.x < (Math.floor(OBSTACLES[i].obstacle[j].position.x / CELL_SIZE) + Math.ceil(OBSTACLES[i].obstacle[j].position.width / WIDTH))) {
+                        isCollide = true;
+                    }
+                }
+            }
+        }
+    }
+
     if (isCollide) {
-        gameOver.play()
-        setTimeout(() => {
-            alert("Game Over")
-        }, 150)
-        snake1 = initSnake()
+        if (snake1.life === 1) {
+            gameOver.play()
+            alert("Game over");
+            snake1 = initSnake("purple");
+            drawLevel(snake1, "levelBoard");
+        } else {
+            snake1.life--;
+            snake1 = recentSnake(snake1);
+        }
     }
     return isCollide
 }
