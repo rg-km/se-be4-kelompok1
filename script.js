@@ -23,6 +23,12 @@ let apple2 = {
     position: initPosition(),
 }
 
+let heart = {
+    type: "heart",
+    color: "red",
+    position: initPosition(),
+}
+
 let direction = {
     Up: 0,
     Down: 1,
@@ -82,9 +88,9 @@ function drawLife(snake) {
     let snakeCanvas = document.getElementById("snakeBoard");
     let ctx = snakeCanvas.getContext("2d");
 
-    // if (checkPrimer(snake)) {
-    //     drawCell(ctx, heart.position.x, heart.position.y, heart.color, "heartIcon");
-    // }
+    if (checkPrimer(snake)) {
+        drawCell(ctx, heart.position.x, heart.position.y, "heartNew");
+    }
 
     for (var i = 0; i < snake.life; i++) {
         showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
@@ -148,6 +154,8 @@ function eat(snake, feed) {
         snake.score++
         if (feed.type == "food") {
             snake.body.push({ x: snake.head.x, y: snake.head.y });
+        } else if (feed.type == "heart") {
+            snake.life++;
         }
         drawLevel(snake, "levelBoard");
     }
@@ -264,6 +272,7 @@ function moveLeft(snake) {
     teleport(snake);
     eat(snake, apple);
     eat(snake, apple2);
+    eat(snake, heart);
 }
 
 function moveRight(snake) {
@@ -271,6 +280,7 @@ function moveRight(snake) {
     teleport(snake);
     eat(snake, apple);
     eat(snake, apple2);
+    eat(snake, heart);
 }
 
 function moveDown(snake) {
@@ -278,6 +288,7 @@ function moveDown(snake) {
     teleport(snake);
     eat(snake, apple);
     eat(snake, apple2);
+    eat(snake, heart);
 }
 
 function moveUp(snake) {
@@ -285,7 +296,7 @@ function moveUp(snake) {
     teleport(snake);
     eat(snake, apple);
     eat(snake, apple2);
-
+    eat(snake, heart);
 }
 
 
