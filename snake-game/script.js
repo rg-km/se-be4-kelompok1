@@ -24,12 +24,8 @@ const OBSTACLES = [
         level: 2,
         obstacle: [
             {
-                position: initBarrier(50, 100, 5, 150),
+                position: initBarrier(120, 200, 120, 10),
                 color: DEFAULTCOLORBARRIER
-            },
-            {
-                position: initBarrier(350, 100, 5, 150),
-                color: DEFAULTCOLORBARRIER,
             },
         ]
     },
@@ -37,25 +33,55 @@ const OBSTACLES = [
         level: 3,
         obstacle: [
             {
-                position: initBarrier(50, 100, 250, 5),
-                color: DEFAULTCOLORBARRIER,
+                position: initBarrier(120, 100, 120, 10),
+                color: DEFAULTCOLORBARRIER
             },
             {
-                position: initBarrier(50, 250, 250, 5),
-                color: DEFAULTCOLORBARRIER,
-            }
+                position: initBarrier(270, 30, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
         ]
     },
     {
         level: 4,
         obstacle: [
-            //obstacle code here
+            {
+                position: initBarrier(120, 200, 120, 10),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(270, 30, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(70, 30, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
         ]
     },
     {
         level: 5,
         obstacle: [
-            //obstacle code here
+            {
+                position: initBarrier(120, 200, 120, 10),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(270, 30, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(70, 30, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(70, 330, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
+            {
+                position: initBarrier(270, 330, 60, 10),
+                color: DEFAULTCOLORBARRIER
+            },
         ]
     },
 ];
