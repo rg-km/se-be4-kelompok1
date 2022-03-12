@@ -1,10 +1,26 @@
 const CELL_SIZE = 20
 const CANVAS_SIZE = 400
 const DEFAULTLIFE = 3;
+const REDRAW_INTERVAL = 50;
+let DEFAULTSPEED = 150;
+const LEVELS = [
+    { level: 1, speed: DEFAULTSPEED, },
+    { level: 2, speed: 100, },
+    { level: 3, speed: 90, },
+    { level: 4, speed: 60, },
+    { level: 5, speed: 50, },
+];
 let snake1 = initSnake()
 let apple = {
+    type: "food",
     color: "red",
     position: initPosition()
+}
+
+let apple2 = {
+    type: "food",
+    color: "red",
+    position: initPosition(),
 }
 
 let direction = {
@@ -19,6 +35,7 @@ function initSnake() {
         direction: initDirection(),
         width: CELL_SIZE,
         score: 0,
+        level: 1,
         life: DEFAULTLIFE,
     }
 }
@@ -65,18 +82,13 @@ function drawLife(snake) {
     let snakeCanvas = document.getElementById("snakeBoard");
     let ctx = snakeCanvas.getContext("2d");
 
-    if (checkPrimer(snake)) {
-        drawCell(ctx, heart.position.x, heart.position.y, heart.color, "heartIcon");
-    }
+    // if (checkPrimer(snake)) {
+    //     drawCell(ctx, heart.position.x, heart.position.y, heart.color, "heartIcon");
+    // }
 
     for (var i = 0; i < snake.life; i++) {
         showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
     }
-}
-
-let apple2 = {
-    color: "red",
-    position: initPosition(),
 }
 
 function drawCell(ctx, x, y, img = null) {
@@ -99,6 +111,7 @@ function drawScore(snake, canvas) {
 }
 
 function draw() {
+    drawLevel(snake1, "levelBoard");
     setInterval(function () {
         let snakeCanvas = document.getElementById("snakeBoard");
         let ctx = snakeCanvas.getContext("2d");
@@ -118,21 +131,25 @@ function draw() {
 
 
         drawScore(snake1, "score1Board")
+        drawSpeed(snake1, "speedBoard");
         drawLife(snake1);
-    }, 200)
+
+    }, REDRAW_INTERVAL);
 }
 draw()
 
 
-function eat(snake, apple) {
+function eat(snake, feed) {
     let eat = new Audio()
     eat.src = "./assets/eat.mp3"
-    if (snake.head.x === apple.position.x && snake.head.y === apple.position.y) {
+    if (snake.head.x === feed.position.x && snake.head.y === feed.position.y) {
         eat.play()
-        apple.position = initPosition()
+        feed.position = initPosition()
         snake.score++
-        snake.body.push({ x: snake.head.x, y: snake.head.y })
-
+        if (feed.type == "food") {
+            snake.body.push({ x: snake.head.x, y: snake.head.y });
+        }
+        drawLevel(snake, "levelBoard");
     }
 }
 
@@ -141,6 +158,46 @@ function moveBody(snake) {
     snake.body.pop();
 
 }
+
+function drawLevel(snake, canvas) {
+    let levelCanvas = document.getElementById(canvas);
+    let levelCtx = levelCanvas.getContext("2d");
+    if (snake.score == 0) {
+        levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        levelCtx.font = "30px Arial";
+        levelCtx.fillStyle = snake.color
+        levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
+    } else if ((snake.score % 5) == 0) {
+        snake.level++;
+        levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        levelCtx.font = "30px Arial";
+        levelCtx.fillStyle = snake.color
+        levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
+        // soundLevelUp();
+    }
+    for (var i = 0; i < LEVELS.length; i++) {
+        if (snake.level == LEVELS[i].level) {
+            DEFAULTSPEED = LEVELS[i].speed;
+        }
+    }
+}
+
+function drawSpeed(snake, canvas) {
+    let speedCanvas;
+    speedCanvas = document.getElementById(canvas);
+    let speedContext = speedCanvas.getContext("2d");
+    speedContext.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    speedContext.font = "30px Arial";
+    speedContext.fillStyle = snake.color;
+    for (var i = 0; i < LEVELS.length; i++) {
+        if (snake.level == LEVELS[i].level) {
+            //MOVE_INTERVAL = LEVELS[i].speed;
+            speedContext.fillText(LEVELS[i].speed, 10, speedCanvas.scrollHeight / 2);
+        }
+    }
+
+}
+
 function checkCollision(snakes) {
     let isCollide = false
     let gameOver = new Audio()
@@ -183,7 +240,7 @@ function move(snake) {
     if (!checkCollision([snake1])) {
         setTimeout(() => {
             move(snake);
-        }, 200);
+        }, DEFAULTSPEED);
     } else initGame()
 
 }
