@@ -2,16 +2,16 @@ const CELL_SIZE = 20
 const CANVAS_SIZE = 400
 const DEFAULTLIFE = 3;
 const REDRAW_INTERVAL = 50;
-let DEFAULTSPEED = 150;
 const DEFAULTCOLORBARRIER = "black";
 const WIDTH = CANVAS_SIZE / CELL_SIZE;
 const HEIGHT = CANVAS_SIZE / CELL_SIZE;
+let DEFAULTSPEED = 250;
 const LEVELS = [
     { level: 1, speed: DEFAULTSPEED, },
-    { level: 2, speed: 100, },
-    { level: 3, speed: 90, },
-    { level: 4, speed: 60, },
-    { level: 5, speed: 50, },
+    { level: 2, speed:  DEFAULTSPEED-20, },
+    { level: 3, speed: DEFAULTSPEED-40, },
+    { level: 4, speed: DEFAULTSPEED-60, },
+    { level: 5, speed: DEFAULTSPEED-80, },
 ];
 const OBSTACLES = [
     {
@@ -222,7 +222,6 @@ function draw() {
     setInterval(function () {
         let snakeCanvas = document.getElementById("snakeBoard");
         let ctx = snakeCanvas.getContext("2d");
-        let img = document.getElementById("apple");
 
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         showObstacle(snake1);
@@ -246,12 +245,14 @@ function draw() {
 draw()
 
 
+
 function eat(snake, feed) {
     let eat = new Audio()
-    eat.src = "./assets/eat.mp3"
+    eat.src="./assets/eat.mp3"
     if (snake.head.x === feed.position.x && snake.head.y === feed.position.y) {
         eat.play()
         feed.position = initPosition()
+
         snake.score++
         if (feed.type == "food") {
             snake.body.push({ x: snake.head.x, y: snake.head.y });
@@ -327,11 +328,9 @@ function checkCollision(snakes) {
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
     for (let i = 0; i < snakes.length; i++) {
-        for (let j = 0; j < snakes.length; j++) {
-            for (let k = 1; k < snakes[j].body.length; k++) {
-                if (snakes[i].head.x === snakes[j].body[k].x && snakes[i].head.y === snakes[j].body[k].y) {
+            for (let k = 1; k < snakes[0].body.length; k++) {
+                if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
                     isCollide = true
-                }
             }
         }
     }
