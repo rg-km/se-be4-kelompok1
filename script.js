@@ -363,7 +363,7 @@ function checkCollision(snakes) {
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
     let soundHitObstacle = new Audio()
-    soundHitObstacle.src="./assets/hitObstacle.wav"
+    soundHitObstacle.src="./assets/ObstacleSound.wav"
 
     for (let i = 0; i < snakes.length; i++) {
             for (let k = 1; k < snakes[0].body.length; k++) {
@@ -405,10 +405,13 @@ function checkCollision(snakes) {
 
 function checkThorn(snakes, thorn) {
 
+    let soundHitThorn = new Audio()
+    soundHitThorn.src="./assets/ObstacleSound.wav"
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
 
     if (snakes.head.x === thorn.position.x && snakes.head.y === thorn.position.y) {
+        soundHitThorn.play()
         thorn.position = initPosition()
 
         if (thorn.type == "thorn") {
