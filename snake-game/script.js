@@ -415,7 +415,7 @@ function checkThorn(snakes, thorn) {
     gameOver.src = "./assets/GameOver.mp3"
 
     thorn.position.x = Math.floor(Math.random() * 3) -1 + thorn.position.x;
-    // thorn.position.y = Math.floor(Math.random() * 3) -1 + thorn.position.y;
+    thorn.position.y = Math.floor(Math.random() * 3) -1 + thorn.position.y;
 
 
     if (snakes.head.x === thorn.position.x && snakes.head.y === thorn.position.y) {
@@ -430,6 +430,7 @@ function checkThorn(snakes, thorn) {
             alert("Game over");
             snakes = initSnake("purple");
             drawLevel(snakes, "levelBoard");
+            initGame()
         }
 
     }
@@ -474,6 +475,26 @@ function teleport(snake) {
         snake.head.y = 0
     }
 }
+
+function teleportThorn(thorn) {
+    if (thorn.position.x < 0) {
+        // thorn.position.x = CANVAS_SIZE / CELL_SIZE - 19
+        thorn.position = initPosition()
+    }
+    if (thorn.position.y === -1) {
+       // thorn.position.y = CANVAS_SIZE / CELL_SIZE - 19
+       thorn.position = initPosition()
+    }
+    if (thorn.position.x >= 20) {
+        // thorn.position.x = 19
+        thorn.position = initPosition()
+    }
+    if (thorn.position.y === 20) {
+        //thorn.position.y = 19
+        thorn.position = initPosition()
+    }
+
+}
 function moveLeft(snake) {
     snake.head.x--;
     teleport(snake);
@@ -481,6 +502,7 @@ function moveLeft(snake) {
     eat(snake, apple2);
     eat(snake, heart);
     checkThorn(snake,thorn);
+    teleportThorn(thorn);
 }
 
 function moveRight(snake) {
@@ -490,6 +512,7 @@ function moveRight(snake) {
     eat(snake, apple2);
     eat(snake, heart);
     checkThorn(snake,thorn);
+    teleportThorn(thorn);
 }
 
 
@@ -500,6 +523,7 @@ function moveDown(snake) {
     eat(snake, apple2);
     eat(snake, heart);
     checkThorn(snake,thorn);
+    teleportThorn(thorn);
 }
 
 
@@ -510,6 +534,7 @@ function moveUp(snake) {
     eat(snake, apple2);
     eat(snake, heart);
     checkThorn(snake,thorn);
+    teleportThorn(thorn);
 }
 
 
