@@ -85,6 +85,7 @@ const OBSTACLES = [
         ]
     },
 ];
+let thornDirection = initDirection();
 
 let snake1 = initSnake()
 let apple = {
@@ -110,6 +111,7 @@ let thorn = {
     type: "thorn",
     color: "red",
     position: initPosition(),
+    direction: 0
 }
 
 
@@ -221,10 +223,10 @@ function drawThorn(snake) {
     let snakeCanvas = document.getElementById("snakeBoard");
     let ctx = snakeCanvas.getContext("2d");
 
-    if (snake.level==1 || snake.level==3) {
+    if (snake.level == 1 || snake.level == 3) {
         drawCell(ctx, thorn.position.x, thorn.position.y, "thorn");
     }
-   
+
 }
 
 function drawScore(snake, canvas) {
@@ -270,7 +272,7 @@ draw()
 
 function setIntervalThorn() {
     setInterval(function () {
-        thorn.position = initPosition()
+        thorn.direction = initDirection()
     }, 2000);
 }
 setIntervalThorn()
@@ -303,7 +305,7 @@ function moveBody(snake) {
 function drawLevel(snake, canvas) {
 
     let soundLevelUp = new Audio()
-    soundLevelUp.src="./assets/changeLevel.wav"
+    soundLevelUp.src = "./assets/changeLevel.wav"
     let levelCanvas = document.getElementById(canvas);
     let levelCtx = levelCanvas.getContext("2d");
 
@@ -367,7 +369,7 @@ function checkCollision(snakes) {
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
     let soundHitObstacle = new Audio()
-    soundHitObstacle.src="./assets/ObstacleSound.wav"
+    soundHitObstacle.src = "./assets/ObstacleSound.wav"
 
     for (let i = 0; i < snakes.length; i++) {
         for (let k = 1; k < snakes[0].body.length; k++) {
@@ -410,13 +412,24 @@ function checkCollision(snakes) {
 function checkThorn(snakes, thorn) {
 
     let soundHitThorn = new Audio()
-    soundHitThorn.src="./assets/ObstacleSound.wav"
+    soundHitThorn.src = "./assets/ObstacleSound.wav"
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
 
-    thorn.position.x = Math.floor(Math.random() * 3) -1 + thorn.position.x;
-    thorn.position.y = Math.floor(Math.random() * 3) -1 + thorn.position.y;
-
+    switch (thorn.direction) {
+        case direction.Left:
+            thorn.position.x--;
+            break;
+        case direction.Right:
+            thorn.position.x++;
+            break;
+        case direction.Up:
+            thorn.position.y--;
+            break;
+        case direction.Down:
+            thorn.position.y++;
+            break;
+    }
 
     if (snakes.head.x === thorn.position.x && snakes.head.y === thorn.position.y) {
         soundHitThorn.play()
@@ -424,7 +437,7 @@ function checkThorn(snakes, thorn) {
 
         if (thorn.type == "thorn") {
             snake1.life--;
-        } 
+        }
 
         if (snake1.life === 0) {
             alert("Game over");
@@ -480,7 +493,7 @@ function teleportThorn(thorn) {
         thorn.position = initPosition()
     }
     if (thorn.position.y === -1) {
-       thorn.position = initPosition()
+        thorn.position = initPosition()
     }
     if (thorn.position.x >= 20) {
         thorn.position = initPosition()
@@ -496,7 +509,7 @@ function moveLeft(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkThorn(snake, thorn);
     teleportThorn(thorn);
 }
 
@@ -506,7 +519,7 @@ function moveRight(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkThorn(snake, thorn);
     teleportThorn(thorn);
 }
 
@@ -517,7 +530,7 @@ function moveDown(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkThorn(snake, thorn);
     teleportThorn(thorn);
 }
 
@@ -528,7 +541,7 @@ function moveUp(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkThorn(snake, thorn);
     teleportThorn(thorn);
 }
 
