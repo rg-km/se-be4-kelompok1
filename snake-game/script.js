@@ -66,9 +66,6 @@ function initDirection() {
 }
 
 function showIcon(ctx, path, x, y, width = 10, height = 10) {
-    if (path === "snake") {
-        // ctx.rotate(20);
-    }
     ctx.drawImage(document.getElementById(path), x, y, width, height);
 }
 
