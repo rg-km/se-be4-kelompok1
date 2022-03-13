@@ -410,6 +410,10 @@ function checkThorn(snakes, thorn) {
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
 
+    thorn.position.x = Math.floor(Math.random() * 3) -1 + thorn.position.x;
+    // thorn.position.y = Math.floor(Math.random() * 3) -1 + thorn.position.y;
+
+
     if (snakes.head.x === thorn.position.x && snakes.head.y === thorn.position.y) {
         soundHitThorn.play()
         thorn.position = initPosition()
