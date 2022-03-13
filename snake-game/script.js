@@ -195,7 +195,7 @@ function drawLife(snake) {
     let ctx = healthCanvas.getContext("2d");
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     for (var i = 0; i < snake.life; i++) {
-        showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
+        showIcon(ctx, "heartIcon", 360 - (i * 20), 5, 20, 20);
     }
 }
 
@@ -236,7 +236,7 @@ function drawScore(snake, canvas) {
         scoreCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
         scoreCtx.font = "30px Arial";
         scoreCtx.fillStyle = snake.color
-        scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
+        scoreCtx.fillText(snake.score, 30, scoreCanvas.scrollHeight / 2);
     }
 }
 
@@ -314,13 +314,13 @@ function drawLevel(snake, canvas) {
         levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         levelCtx.font = "30px Arial";
         levelCtx.fillStyle = snake.color
-        levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
+        levelCtx.fillText("Level " + snake.level, 30, levelCanvas.scrollHeight / 2);
     } else if ((snake.score % 5) == 0) {
         snake.level++;
         levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         levelCtx.font = "30px Arial";
         levelCtx.fillStyle = snake.color
-        levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
+        levelCtx.fillText("Level " + snake.level, 30, levelCanvas.scrollHeight / 2);
         soundLevelUp.play();
 
     }
@@ -336,12 +336,11 @@ function drawSpeed(snake, canvas) {
     speedCanvas = document.getElementById(canvas);
     let speedContext = speedCanvas.getContext("2d");
     speedContext.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    speedContext.font = "30px Arial";
+    speedContext.font = "20px Arial";
     speedContext.fillStyle = snake.color;
     for (var i = 0; i < LEVELS.length; i++) {
         if (snake.level == LEVELS[i].level) {
-            //MOVE_INTERVAL = LEVELS[i].speed;
-            speedContext.fillText(LEVELS[i].speed, 10, speedCanvas.scrollHeight / 2);
+            speedContext.fillText(LEVELS[i].speed + "ms", 20, speedCanvas.scrollHeight / 2);
         }
     }
 
@@ -574,6 +573,6 @@ function initGame() {
 function start() {
     document.getElementById("bg_snake").style.display = "none";
     document.getElementById("snake_game").style.display = "block";
+    draw();
     initGame()
-
 }
