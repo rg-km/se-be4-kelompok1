@@ -8,10 +8,10 @@ const HEIGHT = CANVAS_SIZE / CELL_SIZE;
 let DEFAULTSPEED = 250;
 const LEVELS = [
     { level: 1, speed: DEFAULTSPEED, },
-    { level: 2, speed:  DEFAULTSPEED-20, },
-    { level: 3, speed: DEFAULTSPEED-40, },
-    { level: 4, speed: DEFAULTSPEED-60, },
-    { level: 5, speed: DEFAULTSPEED-80, },
+    { level: 2, speed: DEFAULTSPEED - 20, },
+    { level: 3, speed: DEFAULTSPEED - 40, },
+    { level: 4, speed: DEFAULTSPEED - 60, },
+    { level: 5, speed: DEFAULTSPEED - 80, },
 ];
 const OBSTACLES = [
     {
@@ -183,7 +183,7 @@ function checkPrimer(snake) {
 function drawLife(snake) {
     let healthCanvas = document.getElementById("healthBoard");
     let ctx = healthCanvas.getContext("2d");
-
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     for (var i = 0; i < snake.life; i++) {
         showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
     }
@@ -251,7 +251,7 @@ draw()
 
 function eat(snake, feed) {
     let eat = new Audio()
-    eat.src="./assets/eat.mp3"
+    eat.src = "./assets/eat.mp3"
     if (snake.head.x === feed.position.x && snake.head.y === feed.position.y) {
         eat.play()
         feed.position = initPosition()
@@ -331,9 +331,9 @@ function checkCollision(snakes) {
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
     for (let i = 0; i < snakes.length; i++) {
-            for (let k = 1; k < snakes[0].body.length; k++) {
-                if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
-                    isCollide = true
+        for (let k = 1; k < snakes[0].body.length; k++) {
+            if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
+                isCollide = true
             }
         }
     }
