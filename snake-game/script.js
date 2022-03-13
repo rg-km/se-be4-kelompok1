@@ -105,6 +105,14 @@ let heart = {
     position: initPosition(),
 }
 
+
+let thorn = {
+    type: "thorn",
+    color: "red",
+    position: initPosition(),
+}
+
+
 let direction = {
     Up: 0,
     Down: 1,
@@ -189,6 +197,7 @@ function drawLife(snake) {
     }
 }
 
+
 function drawHearth(ctx, snake) {
     if (checkPrimer(snake)) {
         drawCell(ctx, heart.position.x, heart.position.y, "heartNew");
@@ -206,6 +215,16 @@ function drawCell(ctx, x, y, img = null) {
 function drawObstacle(ctx, x, y, width, height, color) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, width, height);
+}
+
+function drawThorn(snake) {
+    let snakeCanvas = document.getElementById("snakeBoard");
+    let ctx = snakeCanvas.getContext("2d");
+
+    if (snake.level==1 || snake.level==3) {
+        drawCell(ctx, thorn.position.x, thorn.position.y, "thorn");
+    }
+   
 }
 
 function drawScore(snake, canvas) {
@@ -242,10 +261,19 @@ function draw() {
         drawScore(snake1, "score1Board")
         drawSpeed(snake1, "speedBoard");
         drawLife(snake1);
+        drawThorn(snake1);
 
     }, REDRAW_INTERVAL);
 }
 draw()
+
+
+function setIntervalThorn() {
+    setInterval(function () {
+        thorn.position = initPosition()
+    }, 2000);
+}
+setIntervalThorn()
 
 
 
@@ -273,8 +301,13 @@ function moveBody(snake) {
 }
 
 function drawLevel(snake, canvas) {
+
+    let soundLevelUp = new Audio()
+    soundLevelUp.src="./assets/changeLevel.wav"
     let levelCanvas = document.getElementById(canvas);
     let levelCtx = levelCanvas.getContext("2d");
+
+
     if (snake.score == 0) {
         levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         levelCtx.font = "30px Arial";
@@ -286,7 +319,8 @@ function drawLevel(snake, canvas) {
         levelCtx.font = "30px Arial";
         levelCtx.fillStyle = snake.color
         levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
-        // soundLevelUp();
+        soundLevelUp.play();
+
     }
     for (var i = 0; i < LEVELS.length; i++) {
         if (snake.level == LEVELS[i].level) {
@@ -326,10 +360,15 @@ function showObstacle(snake) {
     }
 }
 
+
 function checkCollision(snakes) {
+
     let isCollide = false
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
+    let soundHitObstacle = new Audio()
+    soundHitObstacle.src="./assets/ObstacleSound.wav"
+
     for (let i = 0; i < snakes.length; i++) {
         for (let k = 1; k < snakes[0].body.length; k++) {
             if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
@@ -361,9 +400,40 @@ function checkCollision(snakes) {
         } else {
             snake1.life--;
             snake1 = recentSnake(snake1);
+            soundHitObstacle.play();
         }
     }
     return isCollide
+}
+
+
+function checkThorn(snakes, thorn) {
+
+    let soundHitThorn = new Audio()
+    soundHitThorn.src="./assets/ObstacleSound.wav"
+    let gameOver = new Audio()
+    gameOver.src = "./assets/GameOver.mp3"
+
+    thorn.position.x = Math.floor(Math.random() * 3) -1 + thorn.position.x;
+    // thorn.position.y = Math.floor(Math.random() * 3) -1 + thorn.position.y;
+
+
+    if (snakes.head.x === thorn.position.x && snakes.head.y === thorn.position.y) {
+        soundHitThorn.play()
+        thorn.position = initPosition()
+
+        if (thorn.type == "thorn") {
+            snakes.life--;
+        } 
+
+        if (snakes.life === 0) {
+            alert("Game over");
+            snakes = initSnake("purple");
+            drawLevel(snakes, "levelBoard");
+        }
+
+    }
+
 }
 
 function move(snake) {
@@ -410,6 +480,7 @@ function moveLeft(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkThorn(snake,thorn);
 }
 
 function moveRight(snake) {
@@ -418,7 +489,9 @@ function moveRight(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkThorn(snake,thorn);
 }
+
 
 function moveDown(snake) {
     snake.head.y++;
@@ -426,7 +499,9 @@ function moveDown(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkThorn(snake,thorn);
 }
+
 
 function moveUp(snake) {
     snake.head.y--;
@@ -434,7 +509,9 @@ function moveUp(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkThorn(snake,thorn);
 }
+
 
 
 function turn(snake, d) {
