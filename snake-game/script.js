@@ -85,7 +85,7 @@ const OBSTACLES = [
         ]
     },
 ];
-let thornDirection = "left";
+let thornDirection = initDirection();
 
 let snake1 = initSnake()
 let apple = {
