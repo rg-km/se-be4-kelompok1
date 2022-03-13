@@ -423,14 +423,13 @@ function checkThorn(snakes, thorn) {
         thorn.position = initPosition()
 
         if (thorn.type == "thorn") {
-            snakes.life--;
+            snake1.life--;
         } 
 
-        if (snakes.life === 0) {
+        if (snake1.life === 0) {
             alert("Game over");
-            snakes = initSnake("purple");
-            drawLevel(snakes, "levelBoard");
-            initGame()
+            snake1 = initSnake("purple");
+            drawLevel(snake1, "levelBoard");
         }
 
     }
@@ -478,19 +477,15 @@ function teleport(snake) {
 
 function teleportThorn(thorn) {
     if (thorn.position.x < 0) {
-        // thorn.position.x = CANVAS_SIZE / CELL_SIZE - 19
         thorn.position = initPosition()
     }
     if (thorn.position.y === -1) {
-       // thorn.position.y = CANVAS_SIZE / CELL_SIZE - 19
        thorn.position = initPosition()
     }
     if (thorn.position.x >= 20) {
-        // thorn.position.x = 19
         thorn.position = initPosition()
     }
     if (thorn.position.y === 20) {
-        //thorn.position.y = 19
         thorn.position = initPosition()
     }
 
