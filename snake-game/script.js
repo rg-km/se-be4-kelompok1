@@ -66,6 +66,9 @@ function initDirection() {
 }
 
 function showIcon(ctx, path, x, y, width = 10, height = 10) {
+    if (path === "snake") {
+        // ctx.rotate(20);
+    }
     ctx.drawImage(document.getElementById(path), x, y, width, height);
 }
 
@@ -85,15 +88,17 @@ function checkPrimer(snake) {
 }
 
 function drawLife(snake) {
-    let snakeCanvas = document.getElementById("snakeBoard");
-    let ctx = snakeCanvas.getContext("2d");
-
-    if (checkPrimer(snake)) {
-        drawCell(ctx, heart.position.x, heart.position.y, "heartNew");
-    }
+    let healthCanvas = document.getElementById("healthBoard");
+    let ctx = healthCanvas.getContext("2d");
 
     for (var i = 0; i < snake.life; i++) {
         showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
+    }
+}
+
+function drawHearth(ctx, snake) {
+    if (checkPrimer(snake)) {
+        drawCell(ctx, heart.position.x, heart.position.y, "heartNew");
     }
 }
 
@@ -134,6 +139,7 @@ function draw() {
 
         drawCell(ctx, apple.position.x, apple.position.y, "apple")
         drawCell(ctx, apple2.position.x, apple2.position.y, "apple")
+        drawHearth(ctx, snake1);
 
 
         drawScore(snake1, "score1Board")
