@@ -571,4 +571,9 @@ function initGame() {
     move(snake1)
 }
 
-initGame()
+function start() {
+    document.getElementById("bg_snake").style.display = "none";
+    document.getElementById("snake_game").style.display = "block";
+    initGame()
+
+}
