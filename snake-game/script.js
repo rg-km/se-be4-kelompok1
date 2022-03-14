@@ -390,7 +390,9 @@ function checkCollision(snakes) {
     if (isCollide) {
         if (snake1.life === 1) {
             gameOver.play()
-            alert("Game over");
+            setTimeout(() => {      
+                alert("Game over");
+            },200)
             snake1 = initSnake("purple");
             drawLevel(snake1, "levelBoard");
         } else {
@@ -419,7 +421,10 @@ function checkThorn(snakes, thorn) {
         } 
 
         if (snakes.life === 0) {
-            alert("Game over");
+            gameOver.play()
+            setTimeout(() => {      
+                 alert("Game over");
+            },200)
             snakes = initSnake("purple");
             drawLevel(snakes, "levelBoard");
         }
