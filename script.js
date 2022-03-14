@@ -490,16 +490,16 @@ function teleport(snake) {
 
 function teleportThorn(thorn) {
     if (thorn.position.x < 0) {
-        thorn.position = initPosition()
+        thorn.position.x = CANVAS_SIZE / CELL_SIZE - 1
     }
     if (thorn.position.y === -1) {
-        thorn.position = initPosition()
+        thorn.position.y =  CANVAS_SIZE / CELL_SIZE - 1
     }
     if (thorn.position.x >= 20) {
-        thorn.position = initPosition()
+        thorn.position.x = 0
     }
     if (thorn.position.y === 20) {
-        thorn.position = initPosition()
+        thorn.position.y = 0
     }
 
 }
