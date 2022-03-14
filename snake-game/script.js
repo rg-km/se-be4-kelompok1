@@ -8,10 +8,10 @@ const HEIGHT = CANVAS_SIZE / CELL_SIZE;
 let DEFAULTSPEED = 250;
 const LEVELS = [
     { level: 1, speed: DEFAULTSPEED, },
-    { level: 2, speed:  DEFAULTSPEED-20, },
-    { level: 3, speed: DEFAULTSPEED-40, },
-    { level: 4, speed: DEFAULTSPEED-60, },
-    { level: 5, speed: DEFAULTSPEED-80, },
+    { level: 2, speed: DEFAULTSPEED - 20, },
+    { level: 3, speed: DEFAULTSPEED - 40, },
+    { level: 4, speed: DEFAULTSPEED - 60, },
+    { level: 5, speed: DEFAULTSPEED - 80, },
 ];
 const OBSTACLES = [
     {
@@ -85,6 +85,7 @@ const OBSTACLES = [
         ]
     },
 ];
+let thornDirection = initDirection();
 
 let snake1 = initSnake()
 let apple = {
@@ -110,6 +111,7 @@ let thorn = {
     type: "thorn",
     color: "red",
     position: initPosition(),
+    direction: 0
 }
 
 
@@ -189,15 +191,18 @@ function checkPrimer(snake) {
 }
 
 function drawLife(snake) {
-    let snakeCanvas = document.getElementById("snakeBoard");
-    let ctx = snakeCanvas.getContext("2d");
+    let healthCanvas = document.getElementById("healthBoard");
+    let ctx = healthCanvas.getContext("2d");
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    for (var i = 0; i < snake.life; i++) {
+        showIcon(ctx, "heartIcon", 360 - (i * 20), 5, 20, 20);
+    }
+}
 
+
+function drawHearth(ctx, snake) {
     if (checkPrimer(snake)) {
         drawCell(ctx, heart.position.x, heart.position.y, "heartNew");
-    }
-
-    for (var i = 0; i < snake.life; i++) {
-        showIcon(ctx, "heartIcon", 10 + (i * 20), 5, 20, 20);
     }
 }
 
@@ -218,10 +223,10 @@ function drawThorn(snake) {
     let snakeCanvas = document.getElementById("snakeBoard");
     let ctx = snakeCanvas.getContext("2d");
 
-    if (snake.level==1 || snake.level==3) {
+    if (snake.level == 1 || snake.level == 3) {
         drawCell(ctx, thorn.position.x, thorn.position.y, "thorn");
     }
-   
+
 }
 
 function drawScore(snake, canvas) {
@@ -231,7 +236,24 @@ function drawScore(snake, canvas) {
         scoreCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
         scoreCtx.font = "30px Arial";
         scoreCtx.fillStyle = snake.color
-        scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
+        scoreCtx.fillText(snake.score, 30, scoreCanvas.scrollHeight / 2);
+    }
+}
+
+function drawHeadSnake(context, snake) {
+    switch (snake.direction) {
+        case direction.Left:
+            drawCell(context, snake1.head.x, snake1.head.y, "snakeLeft")
+            break;
+        case direction.Right:
+            drawCell(context, snake1.head.x, snake1.head.y, "snakeRight")
+            break;
+        case direction.Up:
+            drawCell(context, snake1.head.x, snake1.head.y, "snakeUp")
+            break;
+        case direction.Down:
+            drawCell(context, snake1.head.x, snake1.head.y, "snake")
+            break;
     }
 }
 
@@ -245,13 +267,15 @@ function draw() {
         showObstacle(snake1);
 
 
-        drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
+        drawHeadSnake(ctx, snake1);
+        // drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
         for (let i = 1; i < snake1.body.length; i++) {
             drawCell(ctx, snake1.body[i].x, snake1.body[i].y, "bulat")
         }
 
         drawCell(ctx, apple.position.x, apple.position.y, "apple")
         drawCell(ctx, apple2.position.x, apple2.position.y, "apple")
+        drawHearth(ctx, snake1);
 
 
         drawScore(snake1, "score1Board")
@@ -266,7 +290,7 @@ draw()
 
 function setIntervalThorn() {
     setInterval(function () {
-        thorn.position = initPosition()
+        thorn.direction = initDirection()
     }, 2000);
 }
 setIntervalThorn()
@@ -275,7 +299,7 @@ setIntervalThorn()
 
 function eat(snake, feed) {
     let eat = new Audio()
-    eat.src="./assets/eat.mp3"
+    eat.src = "./assets/eat.mp3"
     if (snake.head.x === feed.position.x && snake.head.y === feed.position.y) {
         eat.play()
         feed.position = initPosition()
@@ -299,7 +323,7 @@ function moveBody(snake) {
 function drawLevel(snake, canvas) {
 
     let soundLevelUp = new Audio()
-    soundLevelUp.src="./assets/changeLevel.wav"
+    soundLevelUp.src = "./assets/changeLevel.wav"
     let levelCanvas = document.getElementById(canvas);
     let levelCtx = levelCanvas.getContext("2d");
 
@@ -308,13 +332,13 @@ function drawLevel(snake, canvas) {
         levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         levelCtx.font = "30px Arial";
         levelCtx.fillStyle = snake.color
-        levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
+        levelCtx.fillText("Level " + snake.level, 30, levelCanvas.scrollHeight / 2);
     } else if ((snake.score % 5) == 0) {
         snake.level++;
         levelCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         levelCtx.font = "30px Arial";
         levelCtx.fillStyle = snake.color
-        levelCtx.fillText(snake.level, 10, levelCanvas.scrollHeight / 2);
+        levelCtx.fillText("Level " + snake.level, 30, levelCanvas.scrollHeight / 2);
         soundLevelUp.play();
 
     }
@@ -330,12 +354,11 @@ function drawSpeed(snake, canvas) {
     speedCanvas = document.getElementById(canvas);
     let speedContext = speedCanvas.getContext("2d");
     speedContext.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    speedContext.font = "30px Arial";
+    speedContext.font = "20px Arial";
     speedContext.fillStyle = snake.color;
     for (var i = 0; i < LEVELS.length; i++) {
         if (snake.level == LEVELS[i].level) {
-            //MOVE_INTERVAL = LEVELS[i].speed;
-            speedContext.fillText(LEVELS[i].speed, 10, speedCanvas.scrollHeight / 2);
+            speedContext.fillText(LEVELS[i].speed + "ms", 20, speedCanvas.scrollHeight / 2);
         }
     }
 
@@ -363,12 +386,12 @@ function checkCollision(snakes) {
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
     let soundHitObstacle = new Audio()
-    soundHitObstacle.src="./assets/ObstacleSound.wav"
+    soundHitObstacle.src = "./assets/ObstacleSound.wav"
 
     for (let i = 0; i < snakes.length; i++) {
-            for (let k = 1; k < snakes[0].body.length; k++) {
-                if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
-                    isCollide = true
+        for (let k = 1; k < snakes[0].body.length; k++) {
+            if (snakes[i].head.x === snakes[i].body[k].x && snakes[i].head.y === snakes[i].body[k].y) {
+                isCollide = true
             }
         }
     }
@@ -408,17 +431,32 @@ function checkCollision(snakes) {
 function checkThorn(snakes, thorn) {
 
     let soundHitThorn = new Audio()
-    soundHitThorn.src="./assets/ObstacleSound.wav"
+    soundHitThorn.src = "./assets/ObstacleSound.wav"
     let gameOver = new Audio()
     gameOver.src = "./assets/GameOver.mp3"
+
+    switch (thorn.direction) {
+        case direction.Left:
+            thorn.position.x--;
+            break;
+        case direction.Right:
+            thorn.position.x++;
+            break;
+        case direction.Up:
+            thorn.position.y--;
+            break;
+        case direction.Down:
+            thorn.position.y++;
+            break;
+    }
 
     if (snakes.head.x === thorn.position.x && snakes.head.y === thorn.position.y) {
         soundHitThorn.play()
         thorn.position = initPosition()
 
         if (thorn.type == "thorn") {
-            snakes.life--;
-        } 
+            snake1.life--;
+        }
 
         if (snakes.life === 0) {
             gameOver.play()
@@ -431,6 +469,22 @@ function checkThorn(snakes, thorn) {
 
     }
 
+}
+
+function checkWin() {
+    let winnerSound = new Audio()
+    winnerSound.src = "./assets/Victory.mp3"
+
+    if (snake1.level === 6) {
+        winnerSound.play();
+        setTimeout(() => {      
+            alert("You Win");
+       },200)
+        snake1 = initSnake("purple");
+        drawLevel(snake1, "levelBoard");
+        initGame()
+    }
+    
 }
 
 function move(snake) {
@@ -471,13 +525,32 @@ function teleport(snake) {
         snake.head.y = 0
     }
 }
+
+function teleportThorn(thorn) {
+    if (thorn.position.x < 0) {
+        thorn.position.x = CANVAS_SIZE / CELL_SIZE - 1
+    }
+    if (thorn.position.y === -1) {
+        thorn.position.y =  CANVAS_SIZE / CELL_SIZE - 1
+    }
+    if (thorn.position.x >= 20) {
+        thorn.position.x = 0
+    }
+    if (thorn.position.y === 20) {
+        thorn.position.y = 0
+    }
+
+}
 function moveLeft(snake) {
     snake.head.x--;
     teleport(snake);
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkWin();
+    checkThorn(snake, thorn);
+    teleportThorn(thorn);
+    
 }
 
 function moveRight(snake) {
@@ -486,7 +559,10 @@ function moveRight(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkWin();
+    checkThorn(snake, thorn);
+    teleportThorn(thorn);
+  
 }
 
 
@@ -496,7 +572,9 @@ function moveDown(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkWin();
+    checkThorn(snake, thorn);
+    teleportThorn(thorn);
 }
 
 
@@ -506,7 +584,9 @@ function moveUp(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
-    checkThorn(snake,thorn);
+    checkWin();
+    checkThorn(snake, thorn);
+    teleportThorn(thorn);
 }
 
 
@@ -535,4 +615,9 @@ function initGame() {
     move(snake1)
 }
 
-initGame()
+function start() {
+    document.getElementById("bg_snake").style.display = "none";
+    document.getElementById("snake_game").style.display = "block";
+    draw();
+    initGame()
+}

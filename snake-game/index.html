@@ -1,22 +1,118 @@
 <html>
 
 <head>
+  <style>
+    body {
+      background-color: #dbdbdb;
+    }
+
+    #bg_snake {
+      background-image: url("assets/snakee.png");
+      background-repeat: no-repeat;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: 100%;
+    }
+
+    #p {
+      width: 100%;
+      height: 200px;
+      position: absolute;
+      top: 70px;
+      left: 0;
+      text-align: center;
+    }
+
+    #control {
+      width: 100%;
+      height: 200px;
+      position: absolute;
+      top: 350px;
+      left: 0;
+      text-align: center;
+    }
+
+    .button {
+      display: inline;
+      padding: 20px;
+      font-Size: 100px;
+      color: #eee;
+      margin-top: 20px;
+      background: #333;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 20px
+    }
+
+    #snake_game {
+      display: none;
+      text-align: center;
+      margin: 0 10%;
+      padding: 5% 5px;
+      background-color: #dbdbdb;
+    }
+
+    #snakeBoard {
+      background-color: #ffffff;
+    }
+
+    #snake_status {
+      display: flex;
+      margin-top: 10px;
+      justify-content: center;
+      place-content: space-around;
+    }
+
+    #snake_status canvas {
+      background-color: #ffffff;
+    }
+  </style>
 </head>
 
-<body onload="draw();">
-
-  <h1>Snake</h1>
-  <canvas id="snakeBoard" width="400" height="400" style="border:1px solid #000000;"></canvas>
-  <canvas id="score1Board" width="100" height="100" style="border:1px solid #000000;"></canvas>
-  <canvas id="levelBoard" width="100" height="100" style="border:1px solid #000000;"></canvas>
-  <canvas id="speedBoard" width="100" height="100" style="border:1px solid #000000;"></canvas>
-  <img id="heartIcon" src="./assets/heart.png" style="display: none;" alt="">
-  <img id="heartNew" src="./assets/heart-new.png" style="display: none;" alt="">
-  <img id="apple" src="./assets/Apple.jpg" style="display: none;" width="20" height="20" alt="Apple"></img>
-  <img id="snake" src="./assets/snake.png" style="display: none;" width="20" height="20" alt="Snake"></img>
-  <img id="bulat" src="./assets/bulat.png" style="display: none;" width="20" height="20" alt="SnakeBody"></img>
-  <img id="gameover" src="./assets/gameover.jpg" style="display: none;" width="80%" height="50%" alt="gameover"></img>
-  <img id="thorn" src="./assets/thorn.png" style="display: none;" alt="">
+<body>
+  <div id="bg_snake" class="">
+    <div id="P">
+      </font>
+      </p>
+      <p align="center">
+        <font size="10" face="Times">SNAKE GAME</font>
+      </p>
+    </div>
+    <div id="control">
+      <center><button onclick="start()" class="button">PLAY</button></center>
+    </div>
+  </div>
+  <div id="snake_game">
+    <div>
+      <canvas id="levelBoard" width="200" height="50"></canvas>
+    </div>
+    <div>
+      <canvas id="healthBoard" width="400" height="40"></canvas>
+    </div>
+    <canvas id="snakeBoard" width="400" height="400" style="border:1px solid #000000;"></canvas>
+    <br>
+    <div id="snake_status" class="">
+      <div class="">
+        <h2>SCORE</h2>
+        <canvas id="score1Board" width="100" height="100" style="border:1px solid #000000;"></canvas>
+      </div>
+      <div class="">
+        <h2>SPEED</h2>
+        <canvas id="speedBoard" width="100" height="100" style="border:1px solid #000000;"></canvas>
+      </div>
+    </div>
+    <img id="heartIcon" src="./assets/heart.png" style="display: none;" alt="">
+    <img id="heartNew" src="./assets/heart-new.png" style="display: none;" alt="">
+    <img id="apple" src="./assets/Apple.jpg" style="display: none;" width="20" height="20" alt="Apple"></img>
+    <img id="snake" src="./assets/snake.png" style="display: none;" width="20" height="20" alt="Snake"></img>
+    <img id="snakeUp" src="./assets/snake-up.png" style="display: none;" width="20" height="20" alt="Snake"></img>
+    <img id="snakeLeft" src="./assets/snake-left.png" style="display: none;" width="20" height="20" alt="Snake"></img>
+    <img id="snakeRight" src="./assets/snake-right.png" style="display: none;" width="20" height="20" alt="Snake"></img>
+    <img id="bulat" src="./assets/bulat.png" style="display: none;" width="20" height="20" alt="SnakeBody"></img>
+    <img id="gameover" src="./assets/gameover.jpg" style="display: none;" width="80%" height="50%" alt="gameover"></img>
+    <img id="thorn" src="./assets/thorn.png" style="display: none;" alt="">
+  </div>
 
   <script type="text/javascript" src="script.js"></script>
 </body>
