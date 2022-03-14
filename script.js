@@ -240,23 +240,6 @@ function drawScore(snake, canvas) {
     }
 }
 
-function drawHeadSnake(context, snake) {
-    switch (snake.direction) {
-        case direction.Left:
-            drawCell(context, snake1.head.x, snake1.head.y, "snakeLeft")
-            break;
-        case direction.Right:
-            drawCell(context, snake1.head.x, snake1.head.y, "snakeRight")
-            break;
-        case direction.Up:
-            drawCell(context, snake1.head.x, snake1.head.y, "snakeUp")
-            break;
-        case direction.Down:
-            drawCell(context, snake1.head.x, snake1.head.y, "snake")
-            break;
-    }
-}
-
 function draw() {
     drawLevel(snake1, "levelBoard");
     setInterval(function () {
@@ -267,8 +250,7 @@ function draw() {
         showObstacle(snake1);
 
 
-        drawHeadSnake(ctx, snake1);
-        // drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
+        drawCell(ctx, snake1.head.x, snake1.head.y, "snake")
         for (let i = 1; i < snake1.body.length; i++) {
             drawCell(ctx, snake1.body[i].x, snake1.body[i].y, "bulat")
         }
@@ -460,6 +442,7 @@ function checkThorn(snakes, thorn) {
             alert("Game over");
             snake1 = initSnake("purple");
             drawLevel(snake1, "levelBoard");
+            initGame()
         }
 
     }
