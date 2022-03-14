@@ -440,6 +440,7 @@ function checkThorn(snakes, thorn) {
 
         if (snake1.life === 0) {
             alert("Game over");
+            gameOver.play()
             snake1 = initSnake("purple");
             drawLevel(snake1, "levelBoard");
             initGame()
@@ -447,6 +448,20 @@ function checkThorn(snakes, thorn) {
 
     }
 
+}
+
+function checkWin() {
+    let winnerSound = new Audio()
+    winnerSound.src = "./assets/Victory.mp3"
+
+    if (snake1.level === 6) {
+        alert("You Win");
+        winnerSound.play();
+        snake1 = initSnake("purple");
+        drawLevel(snake1, "levelBoard");
+        initGame()
+    }
+    
 }
 
 function move(snake) {
@@ -509,8 +524,10 @@ function moveLeft(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkWin();
     checkThorn(snake, thorn);
     teleportThorn(thorn);
+    
 }
 
 function moveRight(snake) {
@@ -519,8 +536,10 @@ function moveRight(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkWin();
     checkThorn(snake, thorn);
     teleportThorn(thorn);
+  
 }
 
 
@@ -530,6 +549,7 @@ function moveDown(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkWin();
     checkThorn(snake, thorn);
     teleportThorn(thorn);
 }
@@ -541,6 +561,7 @@ function moveUp(snake) {
     eat(snake, apple);
     eat(snake, apple2);
     eat(snake, heart);
+    checkWin();
     checkThorn(snake, thorn);
     teleportThorn(thorn);
 }
