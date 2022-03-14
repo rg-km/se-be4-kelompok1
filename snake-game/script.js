@@ -413,7 +413,9 @@ function checkCollision(snakes) {
     if (isCollide) {
         if (snake1.life === 1) {
             gameOver.play()
-            alert("Game over");
+            setTimeout(() => {      
+                alert("Game over");
+            },200)
             snake1 = initSnake("purple");
             drawLevel(snake1, "levelBoard");
         } else {
@@ -456,12 +458,13 @@ function checkThorn(snakes, thorn) {
             snake1.life--;
         }
 
-        if (snake1.life === 0) {
-            alert("Game over");
+        if (snakes.life === 0) {
             gameOver.play()
-            snake1 = initSnake("purple");
-            drawLevel(snake1, "levelBoard");
-            initGame()
+            setTimeout(() => {      
+                 alert("Game over");
+            },200)
+            snakes = initSnake("purple");
+            drawLevel(snakes, "levelBoard");
         }
 
     }
@@ -473,8 +476,10 @@ function checkWin() {
     winnerSound.src = "./assets/Victory.mp3"
 
     if (snake1.level === 6) {
-        alert("You Win");
         winnerSound.play();
+        setTimeout(() => {      
+            alert("You Win");
+       },200)
         snake1 = initSnake("purple");
         drawLevel(snake1, "levelBoard");
         initGame()
