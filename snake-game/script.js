@@ -443,6 +443,7 @@ function checkThorn(snakes, thorn) {
             alert("Game over");
             snake1 = initSnake("purple");
             drawLevel(snake1, "levelBoard");
+            initGame()
         }
 
     }
